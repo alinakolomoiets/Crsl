@@ -15,7 +15,7 @@ namespace Crsl
         Button corousel, uus_kart;
         Editor uus_eestisõna, uus_inglisesõna;
         Label uus;
-        string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Riigid_pealinnad.txt");
+        string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Sona.txt");
         public MainPage()
         {
             InitializeComponent();
@@ -25,12 +25,12 @@ namespace Crsl
             corousel = new Button()
             {
                 Text = "Eesti sõna ja selle tõlge",
-                BackgroundColor = Color.DarkOrange,
+                BackgroundColor = Color.Gray,
             };
             uus = new Label()
             {
                 Text = "Kirjuta eesti sõna ja selle tõlge",
-                BackgroundColor = Color.DarkOrange
+                BackgroundColor = Color.Gray
             };
             uus_eestisõna = new Editor()
             {
@@ -43,7 +43,7 @@ namespace Crsl
             uus_kart = new Button()
             {
                 Text = "Lisa uus kart",
-                BackgroundColor = Color.DarkOrange
+                BackgroundColor = Color.Gray
             };
             corousel.Clicked += Corousel_Clicked;
             stack.Children.Add(corousel);

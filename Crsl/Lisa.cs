@@ -9,14 +9,14 @@ using Xamarin.Essentials;
 using System.Runtime.InteropServices.ComTypes;
 namespace Crsl
 {
-    public partial class Lisa : ContentPage
+    public partial class Lisa : CarouselPage
     {
 
         string[] dir;
         string[] sonad;
         public Lisa(string path)
         {
-            string dir_FilePath = Path.Combine(path, "Riigid_pealinnad.txt");
+            string dir_FilePath = Path.Combine(path, "Sona.txt");
             string dir_Text = File.ReadAllText(path);
             dir = dir_Text.Split(';');
             int length = dir.Length;
