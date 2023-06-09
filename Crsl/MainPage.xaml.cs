@@ -25,12 +25,12 @@ namespace Crsl
             corousel = new Button()
             {
                 Text = "Eesti sõna ja selle tõlge",
-                BackgroundColor = Color.Gray,
+                BackgroundColor = Color.LightGreen,
             };
             uus = new Label()
             {
                 Text = "Kirjuta eesti sõna ja selle tõlge",
-                BackgroundColor = Color.Gray
+                BackgroundColor = Color.LightGreen
             };
             uus_eestisõna = new Editor()
             {
@@ -43,7 +43,7 @@ namespace Crsl
             uus_kart = new Button()
             {
                 Text = "Lisa uus kart",
-                BackgroundColor = Color.Gray
+                BackgroundColor = Color.LightGreen
             };
             corousel.Clicked += Corousel_Clicked;
             stack.Children.Add(corousel);

@@ -33,9 +33,11 @@ namespace Crsl
                         {
                             new Label
                             {
-                                FontSize= 20,
+                                FontSize= 70,
+                                HorizontalOptions= LayoutOptions.Center,
+                                VerticalOptions= LayoutOptions.CenterAndExpand,
                                 Text = sonad[0],
-                                BackgroundColor = Color.Wheat,
+                                BackgroundColor = Color.LightGreen,
                                 TabIndex= i
                             }
                         }
@@ -57,7 +59,7 @@ namespace Crsl
                 var lbl = sender as Label;
                 string Tekst_on = dir[lbl.TabIndex];
                 sonad = Tekst_on.Split(':');
-                lbl.Text += " - " + sonad[1];
+                lbl.Text = sonad[1];
                 OnOff = false;
             }
             else
