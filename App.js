@@ -2,44 +2,52 @@ import { useEffect, useRef, useState } from 'react';
 import './App.css';
 
 function App() {
-  const [tooted, setTooted] = useState([]);
+  const [products, setProduct] = useState([]);
   const idRef = useRef();
   const nameRef = useRef();
   const priceRef = useRef();
-  const isActiveRef = useRef();
   const stockRef = useRef();
+  const isActiveRef = useRef();
+  const [isUsd, setUsd] = useState(false);
 
   useEffect(() => {
-    fetch("https://localhost:7024/api/Products")
+    fetch("https://localhost:7024/Products")
       .then(res => res.json())
-      .then(json => setTooted(json));
+      .then(json => setProduct(json));
   }, []);
 
-  function kustuta(index) {                             ////////////////////////
-    fetch("https://localhost:7024/api/Products/kustuta/" + index, {"method": "DELETE"})
+  function kustuta(index) {
+    fetch("https://localhost:7024/Products/kustuta/" + index)
       .then(res => res.json())
-      .then(json => setTooted(json));
+      .then(json => setProduct(json));
   }
-
+  function tellida(index) {
+    let summString = products[index].price.toString();
+    fetch("https://localhost:7024/Payment/" + summString, {"method": "GET"})
+      .then(res => res.json())
+      .then(json => setProducts(json));
+  }
   function lisa() {
-    const uusToode = {
-      "id": Number(idRef.current.value),
-      "name": nameRef.current.value,
-      "price": Number(priceRef.current.value),
-      "stock": Number(stockRef.current.value),
-      "isActive": isActiveRef.current.checked
-    }
-    fetch("https://localhost:7024/api/Products/lisa", {"method": "POST", "body": JSON.stringify(uusToode)})
+    fetch(`https://localhost:7024/Products/lisa/${Number(idRef.current.value)}/${nameRef.current.value}/${(priceRef.current.value)}/${(isActiveRef.current.checked)}/${stockRef.current.value}`, {"method": "POST"})
       .then(res => res.json())
-      .then(json => setTooted(json));
+      .then(json => setProduct(json));
+  }
+  function dollariteks() {
+    const kurss = 1.1;
+    setUsd(true);
+    fetch("https://localhost:7024/Products/hind-dollaritesse/" + kurss)
+      .then(res => res.json())
+      .then(json => setProduct(json));
   }
 
-  function dollariteks() {
-    const kurss = 1.1;                                      ////////////////////////
-    fetch("https://localhost:7024/api/Products/hind-dollaritesse/" + kurss, {"method": "PATCH"})
+  function eurodeks() {
+    const kurss = 0.9091;
+    setUsd(false);
+    fetch("https://localhost:7024/Products/hind-dollaritesse/" + kurss)
       .then(res => res.json())
-      .then(json => setTooted(json));
+      .then(json => setProduct(json));
   }
+
   return (
     <div className="App">
       <label>ID</label> <br />
@@ -53,14 +61,25 @@ function App() {
       <label>isActive</label> <br />
       <input ref={isActiveRef} type="checkbox" /> <br />
       <button onClick={() => lisa()}>Lisa</button>
-      <button onClick={() => dollariteks()}>Muuda dollariteks</button>
-      {tooted.map((toode, index) => 
-        <div>
-          <div>{toode.id}</div>
-          <div>{toode.name}</div>
-          <div>{toode.price.toFixed(2)}</div>
-          <button onClick={() => kustuta(index)}>x</button>
-        </div>)}
+      <br/>
+      {isUsd === false && <button onClick={() => dollariteks()}>Muuda dollariteks</button>}
+      {isUsd === true && <button onClick={() => eurodeks()}>Muuda eurodeks</button>}
+      {products.map((product, index) => 
+        <table>
+          <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Delete</th>
+          </tr>
+          <td>{product.id}</td>
+          <td>{product.name}</td>
+          <td>{product.price.toFixed(2)}</td>
+          <td>{product.stock}</td>
+          <td><button onClick={() => kustuta(index)}>x</button></td>
+          <td><button onClick={() => tellida(index)}>Pay</button></td>
+        </table>)}
     </div>
   );
 }
