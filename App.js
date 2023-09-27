@@ -21,11 +21,15 @@ function App() {
       .then(res => res.json())
       .then(json => setProduct(json));
   }
-  function tellida(index) {
-    let summString = products[index].price.toString();
-    fetch("https://localhost:7024/Payment/" + summString, {"method": "GET"})
+  function tellida(sum) {
+    fetch(`https://localhost:7024/Payment/${sum}`)
       .then(res => res.json())
-      .then(json => setProducts(json));
+      .then(paymentLink =>{
+          window.location.href = paymentLink;
+      })
+      .catch(error=> {
+        console.error("Masmine viga:",error);
+      });
   }
   function lisa() {
     fetch(`https://localhost:7024/Products/lisa/${Number(idRef.current.value)}/${nameRef.current.value}/${(priceRef.current.value)}/${(isActiveRef.current.checked)}/${stockRef.current.value}`, {"method": "POST"})
@@ -75,10 +79,10 @@ function App() {
           </tr>
           <td>{product.id}</td>
           <td>{product.name}</td>
-          <td>{product.price.toFixed(2)}</td>
+          <td>{product.price}</td>
           <td>{product.stock}</td>
           <td><button onClick={() => kustuta(index)}>x</button></td>
-          <td><button onClick={() => tellida(index)}>Pay</button></td>
+          <td><button onClick={() => tellida(product.price)}>Pay</button></td>
         </table>)}
     </div>
   );
