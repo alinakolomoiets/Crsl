@@ -22,14 +22,19 @@ function App() {
       .then(json => setProduct(json));
   }
   function tellida(sum) {
-    fetch(`https://localhost:7024/Payment/${sum}`)
-      .then(res => res.json())
-      .then(paymentLink =>{
-          window.location.href = paymentLink;
-      })
-      .catch(error=> {
-        console.error("Masmine viga:",error);
-      });
+    try{
+        const response = await fetch(`https://localhost:7024/Payment/${sum}/${index}`);
+        if (response.ok){
+          let payLink = await response.text();
+
+          payLink = payLink.replace(/^"|"$/g, '');
+          window.open(payLink, '_blank');
+        }else{
+          console.error('Error payment.');
+        }
+        }catch (error){
+          console.error('Error payment:', error);
+        }
   }
   function lisa() {
     fetch(`https://localhost:7024/Products/lisa/${Number(idRef.current.value)}/${nameRef.current.value}/${(priceRef.current.value)}/${(isActiveRef.current.checked)}/${stockRef.current.value}`, {"method": "POST"})
