@@ -1,37 +1,39 @@
-import { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import './App.css';
 
 function App() {
-  const [dayOfWeek, setDayOfWeek] = useState('');
-  const [currentTime, setCurrentTime] = useState('');
+  const [timeOfDay, setTimeOfDay] = useState('');
   const [storeStatus, setStoreStatus] = useState('');
+  const [error, setError] = useState(null);
 
-  const checkStoreStatus = () => {
-    fetch(`https://localhost:7033/api/Pood/status?dayOfWeek=${dayOfWeek}&currentTime=${currentTime}`)
-      .then(response => response.text())
-      .then(data => {
-        setStoreStatus(data);
-      })
-      .catch(error => {
-        console.error("Päringu viga:", error);
-      });
+  const checkStoreStatus = async () => {
+    try {
+      const response = await fetch(`https://localhost:7033/store-status?timeOfDay=${timeOfDay}`);
+      if (response.ok) {
+        const data = await response.json();
+        setStoreStatus(data.Status);
+      } else {
+        setError('Viga kaupluse staatuse saamisel.');
+      }
+    } catch (error) {
+      setError('Viga API päringu ajal: ' + error.message);
+    }
   };
 
-  useEffect(() => {
-    checkStoreStatus();
-  }, []);
-
   return (
-    <div>
-      <label>Nädala päev:
-        <input type="text" value={dayOfWeek} onChange={(e) => setDayOfWeek(e.target.value)} />
-      </label>
-      <br />
-      <label>Kellaaeg:
-        <input type="text" value={currentTime} onChange={(e) => setCurrentTime(e.target.value)} />
-      </label>
-      <br />
-      <button onClick={checkStoreStatus}>Kontrolli staatus</button>
-      <p>Kaupluse staatus: {storeStatus}</p>
+    <div className="App">
+      <h1>Kontrollida poe staatust</h1>
+      <div>
+        <label>Sisestage kellaaeg: </label>
+        <input
+          type="time"
+          value={timeOfDay}
+          onChange={e => setTimeOfDay(e.target.value)}
+        />
+        <button onClick={checkStoreStatus}>Kontrolli staatus</button>
+      </div>
+      {error && <p>{error}</p>}
+      {storeStatus && <p>Kaupluse staatus: {storeStatus}</p>}
     </div>
   );
 }
